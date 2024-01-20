@@ -1,0 +1,7 @@
+version: "3"
+
+services:
+  historian:
+    image: "redis:7-alpine"
+    ports:
+      - 6372:6372

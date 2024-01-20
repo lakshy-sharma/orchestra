@@ -1,0 +1,10 @@
+# Historian settings
+[historian]
+redis_cluster_endpoint="localhost"
+redis_cluster_port=6372
+
+# Auth settings
+[security]
+
+# Load balancer settings
+[atlas]
