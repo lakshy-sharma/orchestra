@@ -4,4 +4,4 @@ services:
   historian:
     image: "redis:7-alpine"
     ports:
-      - 6372:6372
+      - 6379:6379

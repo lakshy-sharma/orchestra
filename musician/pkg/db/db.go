@@ -12,6 +12,8 @@ import (
 	"errors"
 
 	"github.com/go-redis/redis"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 // Pre-defined list of states.
@@ -39,13 +41,13 @@ type MusicianConfig struct {
 }
 
 // This function creates a new database connection and returns it to you.
-func NewDatabase(address string) (*Database, error) {
+func NewDatabase(address string, password string, logger *zap.Logger) (*Database, error) {
 	client := redis.NewClient(&redis.Options{
-		Addr:     address,
-		Password: "",
-		DB:       0,
+		Addr: address,
+		DB:   0,
 	})
 	if err := client.Ping().Err(); err != nil {
+		logger.Error("Faced an error while pinging database", zapcore.Field{Key: "error", Type: zapcore.StringType, String: err.Error()})
 		return nil, err
 	}
 	return &Database{

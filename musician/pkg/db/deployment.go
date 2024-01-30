@@ -10,7 +10,7 @@ package db
 import (
 	"time"
 
-	"github.com/docker/go-connections/nat"
+	"github.com/docker/docker/api/types/container"
 	"github.com/google/uuid"
 )
 
@@ -37,11 +37,11 @@ type DeploymentEvent struct {
 // The docker deployment is a structure which acts as the main structure for docker based deployments.
 type DockerDeployment struct {
 	Deployment
-	Image        string            `json:"image"`
-	Memory       int               `json:"memory"`
-	Disk         int               `json:"disk"`
-	ExposedPorts nat.PortSet       `json:"exposed_ports"`
-	PortBindings map[string]string `json:"port_bindings"`
+	ContainerName   string            `json:"container_name"`
+	Memory          int               `json:"memory"`
+	Disk            int               `json:"disk"`
+	PortBindings    map[string]string `json:"port_bindings"`
+	ContainerConfig *container.Config
 }
 
 // The docker deployment event structure is used for creating events related to docker deployments.
