@@ -3,7 +3,7 @@ module musician
 go 1.21.5
 
 require (
-	github.com/docker/docker v24.0.7+incompatible
+	github.com/docker/docker v25.0.2+incompatible
 	github.com/docker/go-connections v0.5.0
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/google/uuid v1.4.0
@@ -16,7 +16,6 @@ require (
 require (
 	github.com/Microsoft/go-winio v0.4.14 // indirect
 	github.com/distribution/reference v0.5.0 // indirect
-	github.com/docker/distribution v2.8.3+incompatible // indirect
 	github.com/docker/go-units v0.5.0 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect

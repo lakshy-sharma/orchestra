@@ -4,7 +4,7 @@ Copyright © 2024 Lakshy Sharma lakshy1106@protonmail.com
 package cmd
 
 import (
-	"fmt"
+	"conductor/pkg"
 
 	"github.com/spf13/cobra"
 )
@@ -15,8 +15,10 @@ var startCmd = &cobra.Command{
 	Short: "",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Starting conductor.")
-		ReadConfigurations()
+		conductorConfigs := readConfigurations()
+		logger := setupLogger()
+		logger.Info("Starting conductor")
+		pkg.StartConductor(conductorConfigs, logger)
 	},
 }
 

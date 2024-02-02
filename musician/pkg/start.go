@@ -55,6 +55,5 @@ func StartMusician(musicianConfigs db.MusicianConfig, logger *zap.Logger) {
 		// Sleep for predetermined time and exit the program.
 		time.Sleep(time.Duration(SleepDuration) * time.Second)
 		stopMusician = true
-
 	}
 }

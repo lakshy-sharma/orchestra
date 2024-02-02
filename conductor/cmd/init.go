@@ -19,7 +19,7 @@ var initCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Initializing conductor.")
 		// Read the configurations.
-		ReadConfigurations()
+		readConfigurations()
 		// Call the initializer with the configurations loaded inside the viper module.
 		pkg.InitializeCondutor()
 	},
