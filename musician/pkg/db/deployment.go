@@ -14,19 +14,18 @@ import (
 	"github.com/google/uuid"
 )
 
-// This is the base structure used for making the deployments.
-// Other deployment structures should embed this base structure as these properties are minimum requirements for any deployment.
 type Deployment struct {
-	ID            uuid.UUID `json:"id"`
-	Name          string    `json:"name"`
-	State         State     `json:"state"`
-	RestartPolicy string    `json:"restart_policy"`
-	StartTime     time.Time `json:"start_time"`
-	FinishTime    time.Time `json:"finish_time"`
+	ID                   uuid.UUID  `json:"id"`
+	Name                 string     `json:"name"`
+	State                State      `json:"state"`
+	RestartPolicy        string     `json:"restart_policy"`
+	StartTime            time.Time  `json:"start_time"`
+	FinishTime           time.Time  `json:"finish_time"`
+	DeploymentsSupported []string   `json:"deployments_supported"`
+	DockerData           DockerData `json:"docker_data"`
+	KvmData              KvmData    `json:"kvm_data"`
 }
 
-// This structure represents any event that occurs on a deployment.
-// It is a base structure and shoulud be embedded as required by other event structures for deployments.
 type DeploymentEvent struct {
 	ID         uuid.UUID  `json:"id"`
 	State      State      `json:"state"`
@@ -34,19 +33,15 @@ type DeploymentEvent struct {
 	Deployment Deployment `json:"deployment"`
 }
 
-// The docker deployment is a structure which acts as the main structure for docker based deployments.
-type DockerDeployment struct {
-	Deployment
+type DockerData struct {
 	ContainerName   string            `json:"container_name"`
 	Memory          int               `json:"memory"`
 	Disk            int               `json:"disk"`
 	PortBindings    map[string]string `json:"port_bindings"`
-	ContainerConfig *container.Config
+	ContainerConfig *container.Config `json:"container_config"`
 }
 
-// The docker deployment event structure is used for creating events related to docker deployments.
-type DockerDeploymentEvent struct {
-	DeploymentEvent
+type KvmData struct {
 }
 
 // This function registers a new deployment in the database.

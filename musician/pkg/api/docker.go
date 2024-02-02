@@ -14,25 +14,22 @@ import (
 	"github.com/docker/docker/api/types"
 )
 
-func CreateDockerDeployment(dockerDeployment db.DockerDeployment) error {
+func createDockerDeployment(dockerData db.DockerData) error {
 	dockerInstance, err := pods.NewDockerClient()
 	if err != nil {
 		panic(err)
 	}
-
 	// Pull the image.
-	dockerInstance.PullDockerImage(dockerDeployment.ContainerConfig.Image, types.ImagePullOptions{})
+	dockerInstance.PullDockerImage(dockerData.ContainerConfig.Image, types.ImagePullOptions{})
 	// Create the container using configurations.
-	creationResponse, err := dockerInstance.CreateDockerContainer(dockerDeployment.ContainerConfig, nil, nil, nil, dockerDeployment.ContainerName)
+	creationResponse, err := dockerInstance.CreateDockerContainer(dockerData.ContainerConfig, nil, nil, nil, dockerData.ContainerName)
 	if err != nil {
 		return err
 	}
 	// Start the container.
 	dockerInstance.StartDockerContainer(creationResponse.ID)
-
 	// Fetch the container logs.
 	dockerInstance.GetDockerContainerLogs(creationResponse.ID)
-
 	// Stop the container.
 	dockerInstance.StopDockerContainer(creationResponse.ID, false)
 	return nil

@@ -1,0 +1,22 @@
+{
+    "id": "af0d5314-7c8f-4cc5-869e-04a60f304e94",
+    "name": "Test Deployment",
+    "state": 1,
+    "restart_policy": "never",
+    "deployments_supported": [
+        "docker"
+    ],
+    "docker_data": {
+        "container_name": "TestContainer",
+        "memory": 2048,
+        "disk": 1000,
+        "container_config": {
+            "image": "alpine:latest",
+            "tty": false,
+            "cmd": [
+                "echo",
+                "Hello from Docker Test Container 1"
+            ]
+        }
+    }
+}

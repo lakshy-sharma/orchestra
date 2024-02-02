@@ -8,14 +8,12 @@ Description:
 package pkg
 
 import (
-	"fmt"
+	"encoding/json"
 	"musician/pkg/api"
 	"musician/pkg/db"
 	"time"
 
-	"github.com/docker/docker/api/types/container"
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 // This function is used for starting the gRPC servers which will handle the requests from clients.
@@ -32,27 +30,31 @@ func StartMusician(musicianConfigs db.MusicianConfig, logger *zap.Logger) {
 	// Establish a connection with database server.
 	historianConnection, err := db.NewDatabase("127.0.0.1:6379", "", logger)
 	if err != nil {
-		logger.Fatal("Failed to connect to the database. Shutting Down Musician.")
+		logger.Fatal("Failed to connect to with the database. Shutting Down Musician.")
 	}
 
 	stopMusician := false
 	for !stopMusician {
-		// Fetch data from historian.
-		deploymentData, err := historianConnection.Client.LPop("docker_deployments").Result()
+		// Create a simple variable to store the incoming deployment data.
+		// Fetch data from historian and unmarshal it into your variable.
+		var DeploymentData db.Deployment
+		deploymentString, err := historianConnection.Client.LPop("deployments").Result()
 		if err != nil {
-			logFields := zapcore.Field{Key: "error", String: err.Error()}
-			logger.Error("Failed to fetch docker deployments queue from historian", logFields)
+			logger.Error("Failed to fetch deployments queue from historian")
 		}
-		// Unmarshal deployment data into a deployment json.
-		fmt.Print(deploymentData)
-		// If application hasnt found any deployments then skip the creation steps.
+		err = json.Unmarshal([]byte(deploymentString), &DeploymentData)
 
-		// Create a dummy deployment.
-		dockerDeployment := db.DockerDeployment{ContainerName: "TestingDockerDeployment", ContainerConfig: &container.Config{Image: "alpine:latest", Cmd: []string{"echo", "Hello Lakshy"}, Tty: false}, Deployment: db.Deployment{Name: "Test", RestartPolicy: "always"}}
-		// Spawn the deployment using a goroutine.
-		go api.CreateDockerDeployment(dockerDeployment)
+		// If unmarshaling succeeds, proceed with deployment else throw an error.
+		if err == nil {
+			// Use goroutines to spawn deployments.
+			go api.CreateDeployment(DeploymentData)
+		} else {
+			logger.Sugar().Errorf("Failed while unmarshaling docker deployment data. Error: %s", err)
+		}
 
+		// Sleep for predetermined time and exit the program.
 		time.Sleep(time.Duration(SleepDuration) * time.Second)
 		stopMusician = true
+
 	}
 }
