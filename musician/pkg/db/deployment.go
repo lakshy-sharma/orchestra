@@ -42,6 +42,9 @@ type DockerData struct {
 }
 
 type KvmData struct {
+	VmName string `json:"vm_name"`
+	Memory int    `json:"memory"`
+	Disk   int    `json:"disk"`
 }
 
 // This function registers a new deployment in the database.

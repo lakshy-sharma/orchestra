@@ -3,5 +3,6 @@ version: "3"
 services:
   historian:
     image: "redis:7-alpine"
+    command: redis-server --requirepass changeme
     ports:
       - 6379:6379

@@ -4,32 +4,35 @@ import (
 	"conductor/pkg/api"
 	"conductor/pkg/db"
 	"conductor/pkg/middleware"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
 
-func initRouter(database *db.Database) *gin.Engine {
-	router := gin.Default()
-	return router
-}
-
 func StartConductor(conductorConfig db.ConductorConfig, logger *zap.Logger) {
-	historianConnection, err := db.NewDatabase("127.0.0.1:6379", "", logger)
+	historianConnection, err := db.NewDatabase(
+		fmt.Sprintf("%s:%d", viper.GetString("historian.redis_cluster_endpoint"), viper.GetInt("historian.redis_cluster_port")),
+		viper.GetString("historian.redis_password"),
+		logger,
+	)
 	if err != nil {
 		logger.Fatal("Failed to connect to with the database. Shutting Down Conductor.")
 	}
 
-	router := initRouter(historianConnection)
+	router := gin.Default()
 
 	// Version 1 APIs
-	v1 := router.Group("/v1")
+	v1Secure := router.Group("/v1").Group("/secure")
+	v1Insecure := router.Group("/v1").Group("/insecure")
 	{
-		// NON-Auth APIs.
+		// NON-Authenticated APIs.
+		v1Insecure.GET("status", api.ClusterStatus)
 
 		// Authenticated APIs
-		v1.POST("/deployment/register", middleware.AuthMiddleware(), api.RegisterDeployment(historianConnection))
-		v1.POST("/musician/register", middleware.AuthMiddleware(), api.RegisterMusician(historianConnection))
+		v1Secure.POST("/deployment/register", middleware.AuthMiddleware(), api.RegisterDeployment(historianConnection))
+		v1Secure.POST("/musician/register", middleware.AuthMiddleware(), api.RegisterMusician(historianConnection))
 	}
 
 	// Start the router

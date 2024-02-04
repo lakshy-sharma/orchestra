@@ -1,10 +1,5 @@
-# Historian settings
-[historian]
-redis_cluster_endpoint="localhost"
-redis_cluster_port=6372
-
-# Auth settings
+# Auth settings required to connect with condutor.
 [security]
-
-# Load balancer settings
-[atlas]
+conductor_endpoint = "localhost"
+conductor_port = 11001
+auth_token = "lakshyxyz"

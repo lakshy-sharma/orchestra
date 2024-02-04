@@ -37,9 +37,6 @@ var (
 	Ctx    = context.TODO()
 )
 
-type MusicianConfig struct {
-}
-
 // This function creates a new database connection and returns it to you.
 func NewDatabase(address string, password string, logger *zap.Logger) (*Database, error) {
 	client := redis.NewClient(&redis.Options{

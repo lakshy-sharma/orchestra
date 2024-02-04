@@ -1,10 +1,12 @@
 # Historian settings
 [historian]
 redis_cluster_endpoint="localhost"
-redis_cluster_port=6372
+redis_cluster_port=6379
+redis_password="changeme"
 
 # Auth settings
 [security]
+identity_dir = "./"
 
 # Load balancer settings
 [atlas]

@@ -37,14 +37,12 @@ var (
 	Ctx    = context.TODO()
 )
 
-type ConductorConfig struct {
-}
-
 // This function creates a new database connection and returns it to you.
 func NewDatabase(address string, password string, logger *zap.Logger) (*Database, error) {
 	client := redis.NewClient(&redis.Options{
-		Addr: address,
-		DB:   0,
+		Addr:     address,
+		Password: password,
+		DB:       0,
 	})
 	if err := client.Ping().Err(); err != nil {
 		logger.Error("Faced an error while pinging database", zapcore.Field{Key: "error", Type: zapcore.StringType, String: err.Error()})
