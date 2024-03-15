@@ -28,7 +28,7 @@ func StartConductor(conductorConfig db.ConductorConfig, logger *zap.Logger) {
 	v1Insecure := router.Group("/v1").Group("/insecure")
 	{
 		// NON-Authenticated APIs.
-		v1Insecure.GET("status", api.ClusterStatus)
+		v1Insecure.GET("/status", api.ClusterStatus)
 
 		// Authenticated APIs
 		v1Secure.POST("/deployment/register", middleware.AuthMiddleware(), api.RegisterDeployment(historianConnection))
