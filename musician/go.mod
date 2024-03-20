@@ -3,7 +3,7 @@ module musician
 go 1.21.5
 
 require (
-	github.com/docker/docker v25.0.4+incompatible
+	github.com/docker/docker v25.0.5+incompatible
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/google/uuid v1.6.0
 	github.com/opencontainers/image-spec v1.1.0
